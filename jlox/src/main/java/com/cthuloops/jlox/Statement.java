@@ -24,8 +24,8 @@ abstract class Statement {
   }
 
   static class Print extends Statement {
-    Print(Expression print) {
-        this.print = print;
+    Print(Expression expression) {
+        this.expression = expression;
     }
 
     @Override
@@ -33,7 +33,7 @@ abstract class Statement {
         return visitor.visitPrintStatement(this);
     }
 
-    final Expression print;
+    final Expression expression;
   }
 
   // Base accept method

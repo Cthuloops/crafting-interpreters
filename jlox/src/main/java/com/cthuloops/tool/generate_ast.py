@@ -109,7 +109,7 @@ def build_statements(base_name: str = "Statement") -> list[AST_Class]:
                      ])
     prnt = AST_Class(base_name, Statement_Type.PRINT,
                      [
-                        Parameter(Parameter_Type.EXPRESSION, "print")
+                        Parameter(Parameter_Type.EXPRESSION, "expression")
                      ])
 
     return [expr, prnt]
