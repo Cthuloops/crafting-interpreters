@@ -11,7 +11,7 @@ class Expression_Type(StrEnum):
 
 
 class Statement_Type(StrEnum):
-    EXPRESSION = "Expression"
+    EXPR = "Expr"
     PRINT = "Print"
 
 
@@ -103,7 +103,7 @@ def build_expressions(base_name: str = "Expression") -> list[AST_Class]:
 
 
 def build_statements(base_name: str = "Statement") -> list[AST_Class]:
-    expr = AST_Class(base_name, Statement_Type.EXPRESSION,
+    expr = AST_Class(base_name, Statement_Type.EXPR,
                      [
                         Parameter(Parameter_Type.EXPRESSION, "expression")
                      ])

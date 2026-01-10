@@ -11,7 +11,8 @@ class Expression_Type(StrEnum):
 
 
 class Statement_Type(StrEnum):
-    ...
+    EXPR = "Expr"
+    PRINT = "Print"
 
 
 class Parameter_Type(StrEnum):
@@ -102,13 +103,23 @@ def build_expressions(base_name: str = "Expression") -> list[AST_Class]:
 
 
 def build_statements(base_name: str = "Statement") -> list[AST_Class]:
-    ...
+    expr = AST_Class(base_name, Statement_Type.EXPR,
+                     [
+                        Parameter(Parameter_Type.EXPRESSION, "expression")
+                     ])
+    prnt = AST_Class(base_name, Statement_Type.PRINT,
+                     [
+                        Parameter(Parameter_Type.EXPRESSION, "print")
+                     ])
+
+    return [expr, prnt]
+
 
 
 def generate_visitor_interface(base_name: str, expression_types: list[str]
                                ) -> str:
     start = "  interface Visitor<R> {\n"
-    types = ''.join(f"    R visit{name}{base_name}({name} {base_name.casefold()});\n"
+    types = "".join(f"    R visit{name}{base_name}({name} {base_name.casefold()});\n"
                     for name in expression_types)
     end = "  }\n\n"
     return start + types + end

@@ -6,18 +6,18 @@ import java.util.List;
 
 abstract class Statement {
   interface Visitor<R> {
-    R visitExpressionStatement(Expression statement);
+    R visitExprStatement(Expr statement);
     R visitPrintStatement(Print statement);
   }
 
-  static class Expression extends Statement {
-    Expression(Expression expression) {
+  static class Expr extends Statement {
+    Expr(Expression expression) {
         this.expression = expression;
     }
 
     @Override
     <R> R accept(Visitor<R> visitor) {
-        return visitor.visitExpressionStatement(this);
+        return visitor.visitExprStatement(this);
     }
 
     final Expression expression;
