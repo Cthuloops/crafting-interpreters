@@ -1,5 +1,6 @@
 package com.cthuloops.jlox;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.cthuloops.jlox.TokenType.*;
@@ -14,16 +15,37 @@ class Parser {
         this.tokens = tokens;
     }
 
-    Expression parse() {
-        try {
-            return expression();
-        } catch (ParseError error) {
-            return null;
+    List<Statement> parse() {
+        List<Statement> statements = new ArrayList<>();
+        while (!isAtEnd()) {
+            statements.add(statement());
         }
+
+        return statements;
     }
 
     private Expression expression() {
         return equality();
+    }
+
+    private Statement statement() {
+        if (match(PRINT)) {
+            return printStatement();
+        }
+
+        return expressionStatement();
+    }
+
+    private Statement printStatement() {
+        Expression value = expression();
+        consume(SEMICOLON, "Expect ';' after value.");
+        return new Statement.Print(value);
+    }
+
+    private Statement expressionStatement() {
+        Expression expression = expression();
+        consume(SEMICOLON, "Expect ';' after expression.");
+        return new Statement.Expr(expression);
     }
 
     private Expression equality() {
