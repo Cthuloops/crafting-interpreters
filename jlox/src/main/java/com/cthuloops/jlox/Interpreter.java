@@ -1,6 +1,19 @@
 package com.cthuloops.jlox;
 
-class Interpreter implements Expression.Visitor<Object> {
+import java.util.List;
+
+class Interpreter implements Expression.Visitor<Object>,
+                             Statement.Visitor<Void> {
+
+    void interpret(List<Statement> statements) {
+        try {
+            for (Statement statement : statements) {
+                execute(statement);
+            }
+        } catch (RuntimeError error) {
+            Lox.runtimeError(error);
+        }
+    }
 
     @Override
     public Object visitLiteralExpression(Expression.Literal expression) {
@@ -103,6 +116,23 @@ class Interpreter implements Expression.Visitor<Object> {
     private Object evaluate(Expression expression) {
         return expression.accept(this);
     }
+
+    private void execute(Statement statement) {
+        statement.accept(this);
+    }
+
+    @Override
+    public Void visitExprStatement(Statement.Expr statement) {
+        evaluate(statement.expression);
+        return null;
+    }
+
+    @Override 
+    public Void visitPrintStatement(Statement.Print statement) {
+        Object value = evaluate(statement.expression);
+        System.out.println(stringify(value));
+        return null;
+    }
     
     private boolean isTruthy(Object object) {
         if (object == null) {
@@ -123,5 +153,21 @@ class Interpreter implements Expression.Visitor<Object> {
         }
 
         return a.equals(b);
+    }
+
+    private String stringify(Object object) {
+        if (object == null) {
+            return "nil";
+        }
+
+        if (object instanceof Double) {
+            String text = object.toString();
+            if (text.endsWith(".0")) {
+                text = text.substring(0, text.length() - 2);
+            }
+            return text;
+        }
+
+        return object.toString();
     }
 }
