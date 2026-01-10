@@ -8,11 +8,13 @@ class Expression_Type(StrEnum):
     GROUPING = "Grouping"
     LITERAL = "Literal"
     UNARY = "Unary"
+    VARIABLE = "Variable"
 
 
 class Statement_Type(StrEnum):
     EXPR = "Expr"
     PRINT = "Print"
+    VAR = "Var"
 
 
 class Parameter_Type(StrEnum):
@@ -95,24 +97,33 @@ def build_expressions(base_name: str = "Expression") -> list[AST_Class]:
 
     unary = AST_Class(base_name, Expression_Type.UNARY,
                     [
-                      Parameter(Parameter_Type.TOKEN, "operator"),
-                      Parameter(Parameter_Type.EXPRESSION, "right")
+                        Parameter(Parameter_Type.TOKEN, "operator"),
+                        Parameter(Parameter_Type.EXPRESSION, "right")
+                    ])
+    variable = AST_Class(base_name, Expression_Type.VARIABLE,
+                    [
+                        Parameter(Parameter_Type.TOKEN, "name")
                     ])
 
-    return [binary, grouping, literal, unary]
+    return [binary, grouping, literal, unary, variable]
 
 
 def build_statements(base_name: str = "Statement") -> list[AST_Class]:
     expr = AST_Class(base_name, Statement_Type.EXPR,
-                     [
+                    [
                         Parameter(Parameter_Type.EXPRESSION, "expression")
-                     ])
+                    ])
     prnt = AST_Class(base_name, Statement_Type.PRINT,
-                     [
+                    [
                         Parameter(Parameter_Type.EXPRESSION, "expression")
-                     ])
+                    ])
+    vrbl = AST_Class(base_name, Statement_Type.VAR,
+                    [
+                        Parameter(Parameter_Type.TOKEN, "name"),
+                        Parameter(Parameter_Type.EXPRESSION, "initializer")
+                    ])
 
-    return [expr, prnt]
+    return [expr, prnt, vrbl]
 
 
 
