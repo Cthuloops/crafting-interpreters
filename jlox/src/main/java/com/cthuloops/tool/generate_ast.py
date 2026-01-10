@@ -13,6 +13,7 @@ class Expression_Type(StrEnum):
 
 
 class Statement_Type(StrEnum):
+    BLOCK = "Block"
     EXPR = "Expr"
     PRINT = "Print"
     VAR = "Var"
@@ -22,7 +23,7 @@ class Parameter_Type(StrEnum):
     EXPRESSION = "Expression"
     TOKEN = "Token"
     OBJECT = "Object"
-
+    LIST_STATEMENT = "List<Statement>"
 
 @dataclass(frozen=True)
 class Parameter:
@@ -116,6 +117,10 @@ def build_expressions(base_name: str = "Expression") -> list[AST_Class]:
 
 
 def build_statements(base_name: str = "Statement") -> list[AST_Class]:
+    blck = AST_Class(base_name, Statement_Type.BLOCK,
+                    [
+                        Parameter(Parameter_Type.LIST_STATEMENT, "statements")
+                    ])
     expr = AST_Class(base_name, Statement_Type.EXPR,
                     [
                         Parameter(Parameter_Type.EXPRESSION, "expression")
@@ -130,7 +135,7 @@ def build_statements(base_name: str = "Statement") -> list[AST_Class]:
                         Parameter(Parameter_Type.EXPRESSION, "initializer")
                     ])
 
-    return [expr, prnt, vrbl]
+    return [blck, expr, prnt, vrbl]
 
 
 
