@@ -41,6 +41,11 @@ class Interpreter implements Expression.Visitor<Object>,
         return null;
     }
 
+    @Override
+    public Object visitVariableExpression(Expression.Variable expression) {
+        return environment.get(expression.name);
+    }
+
     private void checkNumberOperand(Token operator, Object operand) {
         if (operand instanceof Double) {
             return;
@@ -132,6 +137,24 @@ class Interpreter implements Expression.Visitor<Object>,
         Object value = evaluate(statement.expression);
         System.out.println(stringify(value));
         return null;
+    }
+
+    @Override
+    public Void visitVarStatement(Statement.Var statement) {
+        Object value = null;
+        if (statement.initializer != null) {
+            value = evaluate(statement.initializer);
+        }
+
+        environment.define(statement.name.lexeme, value);
+        return null;
+    }
+
+    @Override
+    public Object visitAssignExpression(Expression.Assign expression) {
+        Object value = evaluate(expression.value);
+        environment.assign(expression.name, value);
+        return value;
     }
     
     private boolean isTruthy(Object object) {

@@ -4,6 +4,7 @@ from os import path
 import sys
 
 class Expression_Type(StrEnum):
+    ASSIGN = "Assign"
     BINARY = "Binary"
     GROUPING = "Grouping"
     LITERAL = "Literal"
@@ -78,6 +79,12 @@ class AST_Class:
 
 
 def build_expressions(base_name: str = "Expression") -> list[AST_Class]:
+    assign = AST_Class(base_name, Expression_Type.ASSIGN,
+                    [
+                        Parameter(Parameter_Type.TOKEN, "name"),
+                        Parameter(Parameter_Type.EXPRESSION, "value")
+                    ])
+
     binary = AST_Class(base_name, Expression_Type.BINARY, 
                     [
                         Parameter(Parameter_Type.EXPRESSION, "left"),
@@ -105,7 +112,7 @@ def build_expressions(base_name: str = "Expression") -> list[AST_Class]:
                         Parameter(Parameter_Type.TOKEN, "name")
                     ])
 
-    return [binary, grouping, literal, unary, variable]
+    return [assign, binary, grouping, literal, unary, variable]
 
 
 def build_statements(base_name: str = "Statement") -> list[AST_Class]:
