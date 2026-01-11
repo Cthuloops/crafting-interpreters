@@ -4,6 +4,7 @@ import java.util.List;
 
 class Interpreter implements Expression.Visitor<Object>,
                              Statement.Visitor<Void> {
+    private Environment environment = new Environment();
 
     void interpret(List<Statement> statements) {
         try {
@@ -124,6 +125,26 @@ class Interpreter implements Expression.Visitor<Object>,
 
     private void execute(Statement statement) {
         statement.accept(this);
+    }
+
+    void executeBlock(List<Statement> statements, Environment environment) {
+        Environment previous = this.environment;
+
+        try {
+            this.environment = environment;
+
+            for (Statement statement : statements) {
+                execute(statement);
+            }
+        } finally {
+            this.environment = previous;
+        }
+    }
+
+    @Override
+    public Void visitBlockStatement(Statement.Block statement) {
+        executeBlock(statement.statements, new Environment(environment));
+        return null;
     }
 
     @Override
